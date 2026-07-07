@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  gate:
+  approval:
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -18,7 +18,7 @@ jobs:
           [ -n "$PROD_MARKER" ] && echo "gate PROD_MARKER: non-empty" || echo "gate PROD_MARKER: EMPTY"
 
   deploy:
-    needs: gate
+    needs: approval
     if: ${{ always() && !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     steps:
