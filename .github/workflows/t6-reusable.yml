@@ -4,6 +4,7 @@ name: t6-reusable
 # `secrets: inherit`. The environment (and its branch policy) lives inside the
 # reusable workflow's job.
 on:
+  push:
   workflow_dispatch:
 
 jobs:

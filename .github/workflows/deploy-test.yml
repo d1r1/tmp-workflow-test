@@ -3,6 +3,7 @@ name: deploy-test
 # T1-T4: gate job carries `environment: production` (branch policy + secret scope),
 # deploy job mirrors the real repo — it only `needs` the gate and has no environment.
 on:
+  push:
   workflow_dispatch:
 
 jobs:
