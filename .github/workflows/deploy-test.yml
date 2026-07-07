@@ -1,0 +1,32 @@
+name: deploy-test
+
+# T1-T4: gate job carries `environment: production` (branch policy + secret scope),
+# deploy job mirrors the real repo — it only `needs` the gate and has no environment.
+on:
+  workflow_dispatch:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: gate
+        env:
+          PROD_MARKER: ${{ secrets.PROD_MARKER }}
+        run: |
+          echo "gate passed"
+          [ -n "$PROD_MARKER" ] && echo "gate PROD_MARKER: non-empty" || echo "gate PROD_MARKER: EMPTY"
+
+  deploy:
+    needs: gate
+    if: ${{ always() && !failure() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy
+        env:
+          PROD_MARKER: ${{ secrets.PROD_MARKER }}
+          REPO_MARKER: ${{ secrets.REPO_MARKER }}
+        run: |
+          echo "DEPLOYED"
+          [ -n "$PROD_MARKER" ] && echo "deploy PROD_MARKER: non-empty" || echo "deploy PROD_MARKER: EMPTY"
+          [ -n "$REPO_MARKER" ] && echo "deploy REPO_MARKER: non-empty" || echo "deploy REPO_MARKER: EMPTY"

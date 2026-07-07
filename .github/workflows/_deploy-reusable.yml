@@ -1,0 +1,21 @@
+name: _deploy-reusable
+
+# T6: models the real deploy job that calls a reusable workflow via `uses:`.
+# The reusable job DECLARES `environment: production` itself (the caller job cannot,
+# because a job with `uses:` may not carry `environment:`). We test whether the
+# environment secret reaches this job natively, and whether branch policy is
+# evaluated against the caller run's ref.
+on:
+  workflow_call:
+
+jobs:
+  reusable-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: reusable deploy
+        env:
+          PROD_MARKER: ${{ secrets.PROD_MARKER }}
+        run: |
+          echo "REUSABLE DEPLOYED"
+          [ -n "$PROD_MARKER" ] && echo "reusable PROD_MARKER: non-empty" || echo "reusable PROD_MARKER: EMPTY"

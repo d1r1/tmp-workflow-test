@@ -1,0 +1,12 @@
+name: t6-reusable
+
+# T6 caller: the calling job has NO `environment:` and passes secrets via
+# `secrets: inherit`. The environment (and its branch policy) lives inside the
+# reusable workflow's job.
+on:
+  workflow_dispatch:
+
+jobs:
+  call-deploy:
+    uses: ./.github/workflows/_deploy-reusable.yml
+    secrets: inherit
