@@ -1,0 +1,8 @@
+name: t7-prod
+on: [push]
+jobs:
+  call:
+    uses: ./.github/workflows/_deploy-reusable-param.yml
+    with:
+      GH_ENVIRONMENT: production
+    secrets: inherit

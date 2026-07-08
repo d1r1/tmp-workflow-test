@@ -1,0 +1,19 @@
+name: _deploy-reusable-param
+on:
+  workflow_call:
+    inputs:
+      GH_ENVIRONMENT:
+        required: false
+        type: string
+        default: ""
+jobs:
+  reusable-deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GH_ENVIRONMENT }}
+    steps:
+      - name: reusable deploy
+        env:
+          PROD_MARKER: ${{ secrets.PROD_MARKER }}
+        run: |
+          echo "REUSABLE(param) env='${{ inputs.GH_ENVIRONMENT }}'"
+          [ -n "$PROD_MARKER" ] && echo "PROD_MARKER: non-empty" || echo "PROD_MARKER: EMPTY"
